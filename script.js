@@ -13,7 +13,7 @@ oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
 oscillator.connect(gainNode).connect(audioCtx.destination);
 
 oscillator.start();
-gainNode.gain.value = 0.001;
+gainNode.gain.value = 0;
 
 var keys = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
 var majPent = [0, 2, 4, 7, 9];
