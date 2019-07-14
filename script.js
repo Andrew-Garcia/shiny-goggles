@@ -60,3 +60,8 @@ function playNoteSeq() {
 	oscillator.start();
 	gainNode.gain.value = 0.01;
 }
+
+function mute()
+{
+	gainNode.gain.value = 0;
+}
