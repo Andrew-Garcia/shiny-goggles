@@ -6,6 +6,13 @@ console.clear();
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
+var oscillator = audioCtx.createOscillator();
+oscillator.type = 'square';
+oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+oscillator.connect(audioCtx.destination);
+oscillator.start();
+
+/*
 // load some sound
 const audioElement = document.querySelector('audio');
 const track = audioCtx.createMediaElementSource(audioElement);
@@ -61,3 +68,4 @@ pannerControl.addEventListener('input', function() {
 track.connect(gainNode).connect(panner).connect(audioCtx.destination);
 
 // Track credit: Outfoxing the Fox by Kevin MacLeod under Creative Commons
+*/
