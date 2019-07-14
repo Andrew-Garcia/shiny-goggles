@@ -44,24 +44,33 @@ document.getElementById("p1").innerHTML = scale.toString();
 document.getElementById("p2").innerHTML = sequence.toString();
 document.getElementById("p3").innerHTML = getFrequencyOfNote(sequence[0]);
 
-function playNoteSeq() {
+var mute = document.getElementById("mute");
+var play = document.getElementById("play");
+
+play.onclick = function playNoteSeq() {
 	var oscillator = audioCtx.createOscillator();
 	var gainNode = audioCtx.createGain();
 
 	var curTime = audioCtx.currentTime;
 
 	oscillator.type = 'square';
+	/*
 	oscillator.frequency.setValueAtTime(440, curTime);
 	oscillator.frequency.setValueAtTime(311.13, curTime + 1);
 	oscillator.frequency.setValueAtTime(440, curTime + 2);
+	*/
+	for (i = 0; i < sequence.length; i++)
+	{
+		oscillator.frequency.setValueAtTime(getFrequencyOfNote(sequence[i]), curTime + i);
+	}
 
-	oscillator.connect(gainNode).connect(audioCtx.destination);
+	oscillator.connect(gainNode);
+	gainNode.connect(audioCtx.destination);
 
 	oscillator.start();
 	gainNode.gain.value = 0.01;
 }
 
-function mute()
-{
-	gainNode.gain.value = 0;
+mute.onclick = function mute() {
+	gainNode.disconnect(audioCtx.destination);
 }
