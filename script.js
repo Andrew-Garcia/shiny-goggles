@@ -1,71 +1,46 @@
 console.clear();
 
-// instigate our audio context
-
 // for cross browser
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
 var oscillator = audioCtx.createOscillator();
+var gainNode = audioCtx.createGain();
+
 oscillator.type = 'square';
 oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
-oscillator.connect(audioCtx.destination);
+
+oscillator.connect(gainNode).connect(audioCtx.destination);
+
 oscillator.start();
+gainNode.gain.value = 0.001;
 
-/*
-// load some sound
-const audioElement = document.querySelector('audio');
-const track = audioCtx.createMediaElementSource(audioElement);
+var keys = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+var majPent = [0, 2, 4, 7, 9];
 
-const playButton = document.querySelector('.tape-controls-play');
+function pickKey() {
+	return Math.floor(Math.random() * keys.length);
+}
 
-// play pause audio
-playButton.addEventListener('click', function() {
-
-	// check if context is in suspended state (autoplay policy)
-	if (audioCtx.state === 'suspended') {
-		audioCtx.resume();
+function getScaleNotes(scale, key) {
+	var scaleNotes = [];
+	for (i = 0; i < scale.length; i++)
+	{
+		scaleNotes.push(keys[(key + scale[i]) % keys.length]);
 	}
+	return scaleNotes;
+}
 
-	if (this.dataset.playing === 'false') {
-		audioElement.play();
-		this.dataset.playing = 'true';
-	// if track is playing pause it
-	} else if (this.dataset.playing === 'true') {
-		audioElement.pause();
-		this.dataset.playing = 'false';
+function randNoteSeq(scale, num) {
+	var noteSeq = [];
+	for (var j = 0; j < num; j++)
+	{
+		noteSeq.push(scale[Math.floor(Math.random() * scale.length)]);
 	}
+	return noteSeq;
+}
 
-	let state = this.getAttribute('aria-checked') === "true" ? true : false;
-	this.setAttribute( 'aria-checked', state ? "false" : "true" );
+var scale = getScaleNotes(majPent, pickKey());
 
-}, false);
-
-// if track ends
-audioElement.addEventListener('ended', () => {
-	playButton.dataset.playing = 'false';
-	playButton.setAttribute( "aria-checked", "false" );
-}, false);
-
-// volume
-const gainNode = audioCtx.createGain();
-
-const volumeControl = document.querySelector('[data-action="volume"]');
-volumeControl.addEventListener('input', function() {
-	gainNode.gain.value = this.value;
-}, false);
-
-// panning
-const pannerOptions = {pan: 0};
-const panner = new StereoPannerNode(audioCtx, pannerOptions);
-
-const pannerControl = document.querySelector('[data-action="panner"]');
-pannerControl.addEventListener('input', function() {
-	panner.pan.value = this.value;
-}, false);
-
-// connect our graph
-track.connect(gainNode).connect(panner).connect(audioCtx.destination);
-
-// Track credit: Outfoxing the Fox by Kevin MacLeod under Creative Commons
-*/
+document.getElementById("p1").innerHTML = scale.toString();
+document.getElementById("p2").innerHTML = randNoteSeq(scale, 6).toString();
